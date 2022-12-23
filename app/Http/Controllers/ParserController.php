@@ -3,7 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helpers\Mgnl;
+use App\Http\Helpers\Rskrf;
+use App\Http\Helpers\Sbermarket;
+use App\Jobs\CalculateRating;
 use App\Jobs\GetPages;
+use App\Jobs\GetSbermarketProducts;
+use App\Jobs\ParseRskrf;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ParserController extends Controller
@@ -28,6 +34,12 @@ class ParserController extends Controller
                 'items' => $products,
                 'total' => count($products)
             ]);
+        } else if( !empty($request->get('rskrf')) ){
+            foreach ((new Rskrf)->getCategories() as $category){
+                ParseRskrf::dispatch($category);
+            }
+        } else if( !empty($request->get('rating')) ){
+            CalculateRating::dispatch(Product::where('id', 2159)->first());
         } else {
             foreach ($mgnl->getCategories() as $category){
                 GetPages::dispatch($category)->delay(now()->addSeconds(5));

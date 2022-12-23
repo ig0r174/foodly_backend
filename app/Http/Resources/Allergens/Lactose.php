@@ -32,6 +32,7 @@ class Lactose implements AllergenInterface
             "суп-пюре",
             "блины",
             "омлет",
+            "йогурт",
         ];
 
         foreach ($namesLactose as $item){
