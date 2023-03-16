@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
 class ProductController extends Controller
 {
@@ -67,7 +68,18 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request): JsonResponse
     {
-        $product = Product::create($request->all());
+        $data = $request->all();
+
+        if( Product::where(['barcode' => $data['barcode'], 'composition' => $data['composition']])->count() > 0 ) {
+            return response()->json([
+                'status' => false,
+                'message' => 'This product is already exists'
+            ], 409);
+        }
+
+        Redis::del(intval($data['barcode']));
+        Product::where(['barcode' => $data['barcode'], 'name' => $data['name']])->delete();
+        $product = Product::create($data);
 
         return response()->json([
             'status' => true,

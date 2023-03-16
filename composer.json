@@ -15,7 +15,10 @@
         "laravel/horizon": "^5.10",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "vladimir-yuldashev/laravel-queue-rabbitmq": "^11.3"
+        "predis/predis": "^2.0",
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^11.3",
+      "ext-json": "*",
+      "ext-simplexml": "*"
     },
     "require-dev": {
         "andyabih/laravel-to-uml": "^1.0",
